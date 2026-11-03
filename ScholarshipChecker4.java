@@ -177,9 +177,9 @@ public class ScholarshipChecker4 {
         String name = scanner.nextLine().trim();
         while (name.isEmpty() || name.matches(".*\\d.*")) {
             if (name.isEmpty()) {
-                System.out.print(" ➤ERROR! Name cannot be blank. Enter your full name: ");
+                System.out.print(" ERROR! Name cannot be blank. Enter your full name: ");
             } else {
-                System.out.print(" ➤ERROR! Name cannot contain numbers. Enter your full name: ");
+                System.out.print(" ERROR! Name cannot contain numbers. Enter your full name: ");
             }
             name = scanner.nextLine().trim();
         }

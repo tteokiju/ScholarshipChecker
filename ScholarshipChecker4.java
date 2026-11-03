@@ -175,8 +175,12 @@ public class ScholarshipChecker4 {
         // ---------------- Name ----------------
         System.out.print("Enter your full name (LASTNAME, FirstName M.I.): ");
         String name = scanner.nextLine().trim();
-        while (name.isEmpty()) {
-            System.out.print(" ➤ERROR! Name cannot be blank. Enter your full name: ");
+        while (name.isEmpty() || name.matches(".*\\d.*")) {
+            if (name.isEmpty()) {
+                System.out.print(" ➤ERROR! Name cannot be blank. Enter your full name: ");
+            } else {
+                System.out.print(" ➤ERROR! Name cannot contain numbers. Enter your full name: ");
+            }
             name = scanner.nextLine().trim();
         }
 
@@ -196,7 +200,7 @@ public class ScholarshipChecker4 {
                 "Are you a Senior High School STEM strand student/graduate? (Y/N): ");
 
         // ---------------- Target Course ----------------
-        printCourseList();
+        clearScreen();
         int courseChoice = readCourseChoice(scanner);
         Course chosen = COURSES[courseChoice - 1];
 
@@ -305,7 +309,7 @@ public class ScholarshipChecker4 {
         String userId = generateUserId();
 
         // ---------------- Display Results ----------------
-        System.out.println();
+        clearScreen();
         System.out.println("╔═════════════════════════════════════════════════════════╗");
         System.out.println("║                    RESULTS SUMMARY                      ║");
         System.out.println("╚═════════════════════════════════════════════════════════╝");
@@ -347,14 +351,44 @@ public class ScholarshipChecker4 {
     //   HELPER METHODS
     // ================================================================
 
-    /** Prints the full numbered alphabetical list of available courses including the final option. */
-    private static void printCourseList() {
-        System.out.println();
+    // Overloaded clear screen helper methods
+    public static void clearScreen() {
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        System.out.print("\033[H\033[2J\033[3J");
+        System.out.flush();
+    }
+
+    public static void clearScreen(int seconds) throws InterruptedException {
+        if (seconds > 0) {
+            Thread.sleep(seconds * 1000L);
+        }
+        System.out.print("\033[H\033[2J\033[3J");
+        System.out.flush();
+    }
+
+    /** Prints a paginated list of available courses (30 per page for 3 pages). */
+    private static void printCoursePage(int page) {
+        int totalPages = 3;
+        int pageSize = 30;
+        int start = (page - 1) * pageSize;
+        int end = (page == totalPages) ? COURSES.length : start + pageSize;
+
         System.out.println("╔═════════════════════════════════════════════════════════╗");
-        System.out.println("║                   AVAILABLE COURSES                     ║");
+        System.out.printf ("║             AVAILABLE COURSES (Page %d of %d)             ║%n", page, totalPages);
         System.out.println("╚═════════════════════════════════════════════════════════╝");
-        for (Course c : COURSES) {
+        for (int i = start; i < end; i++) {
+            Course c = COURSES[i];
             System.out.printf("%2d│ %s%n", c.number, c.name);
+        }
+        System.out.println("═══════════════════════════════════════════════════════════");
+        if (page == 1) {
+            System.out.println("                     [N] Next Page");
+        } else {
+            System.out.println("         [B] Back Page     │     [N] Next Page");
         }
         System.out.println("═══════════════════════════════════════════════════════════");
     }
@@ -376,25 +410,58 @@ public class ScholarshipChecker4 {
         }
     }
 
-    /** Reads and validates the course selection number. */
+    /** Reads and validates the course selection number with pagination support. */
     private static int readCourseChoice(Scanner scanner) {
-        int choice = -1;
+        int currentPage = 1;
+        boolean redraw = true;
+
         while (true) {
+            if (redraw) {
+                printCoursePage(currentPage);
+                redraw = false;
+            }
+
             System.out.println();
-            System.out.print("Enter the NUMBER of your target course: ");
-            String line = scanner.nextLine().trim();
+            if (currentPage == 1) {
+                System.out.print("Enter the NUMBER of your target course (or 'N' for Next Page): ");
+            } else {
+                System.out.print("Enter the NUMBER of your target course (or 'N' for Next / 'B' for Back): ");
+            }
+
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("N") || input.equalsIgnoreCase("NEXT")) {
+                currentPage = (currentPage % 3) + 1;
+                clearScreen();
+                redraw = true;
+                continue;
+            } else if (input.equalsIgnoreCase("B") || input.equalsIgnoreCase("BACK")) {
+                if (currentPage > 1) {
+                    currentPage--;
+                    clearScreen();
+                    redraw = true;
+                    continue;
+                } else {
+                    System.out.println("Invalid option. You are already on the first page.");
+                    continue;
+                }
+            }
+
             try {
-                choice = Integer.parseInt(line);
+                int choice = Integer.parseInt(input);
                 if (choice >= 1 && choice <= COURSES.length) {
-                    break;
+                    return choice;
                 } else {
                     System.out.println("Please enter a number between 1 and " + COURSES.length + ".");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid course number.");
+                if (currentPage == 1) {
+                    System.out.println("Invalid input. Please enter a valid course number or 'N' for Next Page.");
+                } else {
+                    System.out.println("Invalid input. Please enter a valid course number, 'N' for Next, or 'B' for Back.");
+                }
             }
         }
-        return choice;
     }
 
     /** Reads and validates a non-negative income value. */

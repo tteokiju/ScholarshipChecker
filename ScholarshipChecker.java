@@ -33,10 +33,6 @@ import java.util.Scanner;
  */
 public class ScholarshipChecker {
 
-    // Number of scholarships this program currently evaluates.
-    // Update this when a "(to add)" program is implemented.
-    static final int EVALUATED_SCHOLARSHIPS = 13;
-
     // Assumed income ceiling for "need-based" programs that publish no exact cap
     // (Gokongwei STEM, Jollibee ACE, San Miguel). 400,000 matches the TDP / RA 7687 benchmark.
     // Adjust this one value if you find an official figure.
@@ -56,16 +52,18 @@ public class ScholarshipChecker {
 
     static final Scholarship[] SCHOLARSHIPS = {
         new Scholarship("DOST-Undergraduate Scholarship", new String[] {
-            "Tuition and other school fees",
-            "Monthly stipend",
-            "Book and connectivity allowance",
-            "Transportation, thesis, graduating, and summer training allowances"
+            "Grant of PHP 40,000 per academic year",
+            "Monthly stipend (PHP 8,000)",
+            "Book & Connectivity Allowance (PHP 10,000/year)",
+            "Transportation and thesis/graduating allowance",
+            "Summer/on-the-job training allowance"
         }, "https://www.science-scholarships.ph/"),
         new Scholarship("SM Foundation College Scholarship", new String[] {
             "Full tuition and miscellaneous fees",
-            "Book allowance and monthly stipend",
-            "Placement in an SM partner college or university",
-            "Possible employment opportunities within the SM Group"
+            "Book allowance",
+            "Monthly stipend",
+            "Placement in an SM partner college/university",
+            "Possible employment opportunities within the SM Group after graduation"
         }, "https://www.sm-foundation.org/what-we-do/education/"),
         new Scholarship("Megaworld Foundation Scholarship", new String[] {
             "Full or partial tuition coverage",
@@ -75,54 +73,64 @@ public class ScholarshipChecker {
         new Scholarship("Aboitiz College Scholarship Program (ACSP)", new String[] {
             "Full tuition and fee coverage",
             "Annual book and allowance subsidy",
-            "On-the-job training and possible employment opportunities"
+            "OJT and direct employment opportunities within the Aboitiz Group"
         }, "https://aboitiz.com/aboitiz-foundation/"),
         new Scholarship("CHED Merit Scholarship Program", new String[] {
-            "Tuition and other school fee subsidy",
+            "Tuition and other school fee subsidy (up to PHP 60,000/year)",
             "Cash stipend allowance",
-            "For students enrolled in CHED-recognized priority programs"
+            "Must be enrolled in a CHED recognized priority program"
         }, "https://ched.gov.ph/"),
         new Scholarship("CHED Bagong Pilipinas Merit Scholarship Program (BPMSP)", new String[] {
-            "Tuition and other school fee coverage",
-            "Living stipend and allowances",
-            "Academic excellence incentives"
+            "Full coverage of tuition and other school fees",
+            "Generous annual living stipend and allowances",
+            "Academic excellence incentives for top performers"
         }, "https://ched.gov.ph/"),
         new Scholarship("Ayala U-GO Scholarship Program", new String[] {
-            "Renewable financial grant",
-            "Supports female students demonstrating financial need",
-            "Focuses on priority fields such as communication, education, and health sciences"
+            "Financial grant entitlement (approx. PHP 40,000 renewable grant)",
+            "Exclusively for female students demonstrating financial need in public colleges/universities",
+            "Specifically supports priority fields like Communication, Education, and Health Sciences"
         }, "https://ugoscholarship.ayalafoundation.org/"),
         new Scholarship("GrabScholar College Scholarship", new String[] {
-            "Tuition and miscellaneous fee support",
-            "School supplies allowance",
-            "Monthly student allowance",
-            "Learning and development programs and internship opportunities"
+            "100% tuition and miscellaneous fees (full-ride, merit-based)",
+            "School supplies allowance (PHP 11,000/year)",
+            "Monthly student allowance (PHP 8,000/month)",
+            "Learning and development programs, plus internship opportunities",
+            "NOTE: For incoming first-year students only; you must not have another active scholarship"
         }, "https://www.grab.com/ph/"),
         new Scholarship("CHED Tertiary Education Subsidy (TES)", new String[] {
-            "Annual subsidy depending on school type",
-            "Additional allowance for students with disabilities",
-            "One-time licensure examination reimbursement"
+            "Grant of PHP 10,000 to PHP 27,000 per academic year (depends on priority tier and school type)",
+            "Extra PHP 10,000/year for PWD students",
+            "One-time licensure exam reimbursement (up to PHP 8,000)",
+            "NOTE: Applied for through your school; funds are limited and ranked by priority.",
+            "Cannot be combined with other national government scholarships (e.g., TDP, DOST, CHED Merit)"
         }, "https://unifast.gov.ph/tes.html"),
         new Scholarship("CHED Tulong Dunong Program (TDP)", new String[] {
-            "PHP 7,500 per regular semester",
-            "For eligible first undergraduate degree students",
-            "Subject to prioritization and availability of funds"
+            "Grant of PHP 7,500 per semester (PHP 15,000 per academic year)",
+            "For a first undergraduate degree in SUCs, LUCs or CHED-UniFAST partner private schools",
+            "Requires a Certificate of Indigency from your Punong Barangay",
+            "NOTE: Cannot be combined with TES or other national government scholarships"
         }, "https://unifast.gov.ph/tes.html"),
         new Scholarship("GBF STEM College Scholarship (Gokongwei)", new String[] {
-            "Annual grant that varies by university",
-            "Scholar development programs and leadership training",
-            "Internship and possible employment opportunities in the Gokongwei Group"
+            "Fixed annual grant of PHP 80,000 to PHP 120,000 (depends on your university)",
+            "Scholar development programs (leadership training, upskilling)",
+            "Internship in a Gokongwei Group company",
+            "Employment opportunity in the Gokongwei Group (subject to vacancy)",
+            "NOTE: Accepted year levels vary by course; good moral standing and extra-curricular involvement required"
         }, "https://www.gbf.org.ph/"),
         new Scholarship("Jollibee Group Foundation ACE Scholarship", new String[] {
-            "Support for indigent youth through the ACE program",
-            "Agro-entrepreneurship training and life-skills development",
-            "Employability and career support through partner institutions"
+            "Scholarship for indigent youth under the Access, Curriculum and Employability (ACE) program",
+            "Agro-entrepreneurship training with life-skills and curriculum enhancement",
+            "Employability and career support through JGF partner institutions",
+            "NOTE: ACE is mainly a technical-vocational (TESDA NC II) program; confirm degree-level slots with JGF"
         }, "https://jollibeegroupfoundation.org/"),
         new Scholarship("San Miguel Foundation Scholarship", new String[] {
-            "Educational assistance",
-            "Possible employment opportunities within the San Miguel Group"
+            "Educational assistance from San Miguel Foundation, Inc.",
+            "Possible employment opportunities within the San Miguel group",
+            "NOTE: Criteria come from a third-party summary; confirm requirements and benefits with the foundation"
         }, "https://www.sanmiguel.com.ph/")
     };
+
+    static final int EVALUATED_SCHOLARSHIPS = SCHOLARSHIPS.length;
 
     // ================================================================
     //   COURSE DATA
@@ -278,11 +286,13 @@ public class ScholarshipChecker {
             while (running) {
                 printMainMenu();
                 String choice = scanner.nextLine().trim();
+                clearScreen();
 
                 switch (choice) {
                     case "1":
                         run(scanner);
                         returnToMenu(scanner);
+                        clearScreen();
                         break;
                     case "2":
                         viewScholarshipDetails(scanner);
@@ -318,38 +328,66 @@ public class ScholarshipChecker {
     }
 
     private static void viewScholarshipDetails(Scanner scanner) {
-        printScholarshipList();
-        int choice = readScholarshipChoice(scanner, "Enter a scholarship number to view its details: ", -1);
-        Scholarship scholarship = SCHOLARSHIPS[choice - 1];
+        while (true) {
+            printScholarshipList();
+            int choice = readScholarshipChoice(scanner, "Enter a scholarship number to view its details: ", -1);
+            Scholarship scholarship = SCHOLARSHIPS[choice - 1];
 
-        System.out.println("\n" + scholarship.name);
-        System.out.println("Benefits:");
-        for (String benefit : scholarship.benefits) {
-            System.out.println("- " + benefit);
+            System.out.println("\n" + scholarship.name);
+            System.out.println("Benefits:");
+            for (String benefit : scholarship.benefits) {
+                System.out.println("- " + benefit);
+            }
+            System.out.println("Information: " + scholarship.informationUrl);
+
+            int action = readRepeatChoice(scanner, "[1] View another scholarship  [2] Return to menu: ");
+            clearScreen();
+            if (action == 2) {
+                return;
+            }
         }
-        System.out.println("Information: " + scholarship.informationUrl);
-        returnToMenu(scanner);
     }
 
     private static void compareScholarships(Scanner scanner) {
-        printScholarshipList();
-        int firstChoice = readScholarshipChoice(scanner, "Choose the first scholarship: ", -1);
-        int secondChoice = readScholarshipChoice(scanner, "Choose a different scholarship: ", firstChoice);
-        Scholarship first = SCHOLARSHIPS[firstChoice - 1];
-        Scholarship second = SCHOLARSHIPS[secondChoice - 1];
-        List<String> firstLines = comparisonLines(first);
-        List<String> secondLines = comparisonLines(second);
+        while (true) {
+            printScholarshipList();
+            int firstChoice = readScholarshipChoice(scanner, "Choose the first scholarship: ", -1);
+            int secondChoice = readScholarshipChoice(scanner, "Choose a different scholarship: ", firstChoice);
+            Scholarship first = SCHOLARSHIPS[firstChoice - 1];
+            Scholarship second = SCHOLARSHIPS[secondChoice - 1];
+            List<String> firstLines = comparisonLines(first);
+            List<String> secondLines = comparisonLines(second);
 
-        System.out.println();
-        System.out.printf("%-44s | %-44s%n", "SCHOLARSHIP 1", "SCHOLARSHIP 2");
-        System.out.println("---------------------------------------------+---------------------------------------------");
-        int rowCount = Math.max(firstLines.size(), secondLines.size());
-        for (int i = 0; i < rowCount; i++) {
-            String firstLine = i < firstLines.size() ? firstLines.get(i) : "";
-            String secondLine = i < secondLines.size() ? secondLines.get(i) : "";
-            System.out.printf("%-44s | %-44s%n", firstLine, secondLine);
+            System.out.println();
+            System.out.printf("%-44s | %-44s%n", "SCHOLARSHIP 1", "SCHOLARSHIP 2");
+            System.out.println("---------------------------------------------+---------------------------------------------");
+            int rowCount = Math.max(firstLines.size(), secondLines.size());
+            for (int i = 0; i < rowCount; i++) {
+                String firstLine = i < firstLines.size() ? firstLines.get(i) : "";
+                String secondLine = i < secondLines.size() ? secondLines.get(i) : "";
+                System.out.printf("%-44s | %-44s%n", firstLine, secondLine);
+            }
+
+            System.out.println("\nInformation links:");
+            System.out.println(first.name + ": " + first.informationUrl);
+            System.out.println(second.name + ": " + second.informationUrl);
+            int action = readRepeatChoice(scanner, "[1] Compare scholarships again  [2] Return to menu: ");
+            clearScreen();
+            if (action == 2) {
+                return;
+            }
         }
-        returnToMenu(scanner);
+    }
+
+    private static int readRepeatChoice(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print("\n" + prompt);
+            String input = scanner.nextLine().trim();
+            if (input.equals("1") || input.equals("2")) {
+                return Integer.parseInt(input);
+            }
+            System.out.println("Invalid option. Please enter 1 or 2.");
+        }
     }
 
     private static List<String> comparisonLines(Scholarship scholarship) {
@@ -467,10 +505,8 @@ public class ScholarshipChecker {
         boolean isNotIncluded = (courseChoice == COURSES.length);
 
         // ---------------- Evaluate Eligibility ----------------
-        // Two parallel arrays store each qualified scholarship's name and its benefits.
-        // eligibleCount tracks how many slots are filled so far.
-        String[] eligibleNames = new String[EVALUATED_SCHOLARSHIPS];
-        String[] eligibleBenefits = new String[EVALUATED_SCHOLARSHIPS];
+        Scholarship[] eligibleScholarships = new Scholarship[EVALUATED_SCHOLARSHIPS];
+        String[] eligibilityNotes = new String[EVALUATED_SCHOLARSHIPS];
         int eligibleCount = 0;
 
         if (!isNotIncluded) {
@@ -480,22 +516,14 @@ public class ScholarshipChecker {
             if (dostEligible) {
                 // Income <= 400,000 qualifies for both RA 7687 and Merit; otherwise Merit only
                 String dostScholarshipType = (income <= 400_000)
-                    ? "- You are eligible for RA 7687 and MERIT scholarship.\n"
-                    : "- You are eligible for MERIT scholarship.\n";
-                // Non-STEM applicants get an extra reminder (top 10% of class)
+                    ? "You are eligible for RA 7687 and MERIT scholarship."
+                    : "You are eligible for MERIT scholarship.";
                 String dostNote = isStemStudent
                     ? ""
-                    : "   - NOTE: As a non-STEM strand applicant, you must belong to the upper 10% of your graduating class to qualify.\n" +
-                      "     This requirement can be confirmed with your school.";
-                eligibleNames[eligibleCount] = "DOST-Undergraduate Scholarship";
-                eligibleBenefits[eligibleCount] =
-                    dostScholarshipType +
-                    "   - Grant of PHP 40,000 per academic year\n" +
-                    "   - Monthly stipend (PHP 8,000)\n" +
-                    "   - Book & Connectivity Allowance (PHP 10,000/year)\n" +
-                    "   - Transportation and thesis/graduating allowance\n" +
-                    "   - Summer/on-the-job training allowance\n" +
-                    dostNote;
+                    : "NOTE: As a non-STEM strand applicant, you must belong to the upper 10% of your graduating class to qualify.\n" +
+                      "This requirement can be confirmed with your school.";
+                eligibleScholarships[eligibleCount] = SCHOLARSHIPS[0];
+                eligibilityNotes[eligibleCount] = dostScholarshipType + (dostNote.isEmpty() ? "" : "\n" + dostNote);
                 eligibleCount++;   // move to the next free slot
             }
 
@@ -503,13 +531,7 @@ public class ScholarshipChecker {
             // Rule: approved course AND income <= 150,000 AND grade >= 88
             boolean smEligible = chosen.isSMApproved && income <= 150_000 && grade >= 88.0;
             if (smEligible) {
-                eligibleNames[eligibleCount] = "SM Foundation College Scholarship";
-                eligibleBenefits[eligibleCount] =
-                    "- Full tuition and miscellaneous fees\n" +
-                    "   - Book allowance\n" +
-                    "   - Monthly stipend\n" +
-                    "   - Placement in an SM partner college/university\n" +
-                    "   - Possible employment opportunities within the SM Group after graduation";
+                eligibleScholarships[eligibleCount] = SCHOLARSHIPS[1];
                 eligibleCount++;
             }
 
@@ -517,11 +539,7 @@ public class ScholarshipChecker {
             // Rule: approved course AND income <= 400,000 AND grade >= 85
             boolean megaworldEligible = chosen.isMegaworldApproved && income <= 400_000 && grade >= 85.0;
             if (megaworldEligible) {
-                eligibleNames[eligibleCount] = "Megaworld Foundation Scholarship";
-                eligibleBenefits[eligibleCount] =
-                    "- Full or partial tuition coverage\n" +
-                    "   - Allowances for books and other educational needs\n" +
-                    "   - Internship and career opportunities within Megaworld Corporation";
+                eligibleScholarships[eligibleCount] = SCHOLARSHIPS[2];
                 eligibleCount++;
             }
 
@@ -529,11 +547,7 @@ public class ScholarshipChecker {
             // Rule: approved course AND grade >= 88 (no income limit)
             boolean aboitizEligible = chosen.isAboitizApproved && grade >= 88.0;
             if (aboitizEligible) {
-                eligibleNames[eligibleCount] = "Aboitiz College Scholarship Program (ACSP)";
-                eligibleBenefits[eligibleCount] =
-                    "- Full tuition and fee coverage\n" +
-                    "   - Annual book and allowance subsidy\n" +
-                    "   - OJT and direct employment opportunities within the Aboitiz Group";
+                eligibleScholarships[eligibleCount] = SCHOLARSHIPS[3];
                 eligibleCount++;
             }
 
@@ -541,11 +555,7 @@ public class ScholarshipChecker {
             // Rule: CHED-approved course AND grade >= 85 (no income limit)
             boolean chedEligible = chosen.isChedBpApproved && grade >= 85.0;
             if (chedEligible) {
-                eligibleNames[eligibleCount] = "CHED Merit Scholarship Program";
-                eligibleBenefits[eligibleCount] =
-                    "- Tuition and other school fee subsidy (up to PHP 60,000/year)\n" +
-                    "   - Cash stipend allowance\n" +
-                    "   - Must be enrolled in a CHED recognized priority program";
+                eligibleScholarships[eligibleCount] = SCHOLARSHIPS[4];
                 eligibleCount++;
             }
 
@@ -553,11 +563,7 @@ public class ScholarshipChecker {
             // Rule: CHED-approved course AND income <= 2,000,000 AND grade >= 95 (stricter grade)
             boolean chedBpEligible = chosen.isChedBpApproved && income <= 2_000_000 && grade >= 95.0;
             if (chedBpEligible) {
-                eligibleNames[eligibleCount] = "CHED Bagong Pilipinas Merit Scholarship Program (BPMSP)";
-                eligibleBenefits[eligibleCount] =
-                    "- Full coverage of tuition and other school fees\n" +
-                    "   - Generous annual living stipend and allowances\n" +
-                    "   - Academic excellence incentives for top performers";
+                eligibleScholarships[eligibleCount] = SCHOLARSHIPS[5];
                 eligibleCount++;
             }
 
@@ -566,11 +572,7 @@ public class ScholarshipChecker {
             boolean isFemale = sex.equalsIgnoreCase("Female"); // Aligned with the output from readSex
             boolean ayalaUgoEligible = isFemale && grade >= 85.0 && chosen.isAyalaApproved;
             if (ayalaUgoEligible) {
-                eligibleNames[eligibleCount] = "Ayala U-GO Scholarship Program";
-                eligibleBenefits[eligibleCount] =
-                    "- Financial grant entitlement (approx. PHP 40,000 renewable grant)\n" +
-                    "   - Exclusively for female students demonstrating financial need in public colleges/universities\n" +
-                    "   - Specifically supports priority fields like Communication, Education, and Health Sciences";
+                eligibleScholarships[eligibleCount] = SCHOLARSHIPS[6];
                 eligibleCount++;
             }
 
@@ -578,13 +580,7 @@ public class ScholarshipChecker {
             // Rule: Business/STEM (non-medical)/Sustainability course AND Grade 12 average >= 90
             boolean grabEligible = chosen.isGrabApproved && grade >= 90.0;
             if (grabEligible) {
-                eligibleNames[eligibleCount] = "GrabScholar College Scholarship";
-                eligibleBenefits[eligibleCount] =
-                    "- 100% tuition and miscellaneous fees (full-ride, merit-based)\n" +
-                    "   - School supplies allowance (PHP 11,000/year)\n" +
-                    "   - Monthly student allowance (PHP 8,000/month)\n" +
-                    "   - Learning and development programs, plus internship opportunities\n" +
-                    "   - NOTE: For incoming first-year students only; you must not have another active scholarship";
+                eligibleScholarships[eligibleCount] = SCHOLARSHIPS[7];
                 eligibleCount++;
             }
 
@@ -592,13 +588,7 @@ public class ScholarshipChecker {
             // Rule: any CHED-recognized course AND belongs to a TES priority group
             boolean tesEligible = isPriorityGroup;
             if (tesEligible) {
-                eligibleNames[eligibleCount] = "CHED Tertiary Education Subsidy (TES)";
-                eligibleBenefits[eligibleCount] =
-                    "- Grant of PHP 10,000 to PHP 27,000 per academic year (depends on priority tier and school type)\n" +
-                    "   - Extra PHP 10,000/year for PWD students\n" +
-                    "   - One-time licensure exam reimbursement (up to PHP 8,000)\n" +
-                    "   - NOTE: Applied for through your school; funds are limited and ranked by priority.\n" +
-                    "     Cannot be combined with other national government scholarships (e.g., TDP, DOST, CHED Merit)";
+                eligibleScholarships[eligibleCount] = SCHOLARSHIPS[8];
                 eligibleCount++;
             }
 
@@ -606,12 +596,7 @@ public class ScholarshipChecker {
             // Rule: any CHED-recognized course AND household income <= 400,000
             boolean tdpEligible = income <= 400_000;
             if (tdpEligible) {
-                eligibleNames[eligibleCount] = "CHED Tulong Dunong Program (TDP)";
-                eligibleBenefits[eligibleCount] =
-                    "- Grant of PHP 7,500 per semester (PHP 15,000 per academic year)\n" +
-                    "   - For a first undergraduate degree in SUCs, LUCs or CHED-UniFAST partner private schools\n" +
-                    "   - Requires a Certificate of Indigency from your Punong Barangay\n" +
-                    "   - NOTE: Cannot be combined with TES or other national government scholarships";
+                eligibleScholarships[eligibleCount] = SCHOLARSHIPS[9];
                 eligibleCount++;
             }
 
@@ -620,13 +605,7 @@ public class ScholarshipChecker {
             boolean gbfEligible = chosen.isGokongweiApproved
                     && grade >= 85.0 && income <= NEED_BASED_INCOME_CEILING;
             if (gbfEligible) {
-                eligibleNames[eligibleCount] = "GBF STEM College Scholarship (Gokongwei)";
-                eligibleBenefits[eligibleCount] =
-                    "- Fixed annual grant of PHP 80,000 to PHP 120,000 (depends on your university)\n" +
-                    "   - Scholar development programs (leadership training, upskilling)\n" +
-                    "   - Internship in a Gokongwei Group company\n" +
-                    "   - Employment opportunity in the Gokongwei Group (subject to vacancy)\n" +
-                    "   - NOTE: Accepted year levels vary by course; good moral standing and extra-curricular involvement required";
+                eligibleScholarships[eligibleCount] = SCHOLARSHIPS[10];
                 eligibleCount++;
             }
 
@@ -635,12 +614,7 @@ public class ScholarshipChecker {
             boolean jgfEligible = chosen.isJollibeeApproved
                     && income <= NEED_BASED_INCOME_CEILING;
             if (jgfEligible) {
-                eligibleNames[eligibleCount] = "Jollibee Group Foundation ACE Scholarship";
-                eligibleBenefits[eligibleCount] =
-                    "- Scholarship for indigent youth under the Access, Curriculum and Employability (ACE) program\n" +
-                    "   - Agro-entrepreneurship training with life-skills and curriculum enhancement\n" +
-                    "   - Employability and career support through JGF partner institutions\n" +
-                    "   - NOTE: ACE is mainly a technical-vocational (TESDA NC II) program; confirm degree-level slots with JGF";
+                eligibleScholarships[eligibleCount] = SCHOLARSHIPS[11];
                 eligibleCount++;
             }
 
@@ -649,11 +623,7 @@ public class ScholarshipChecker {
             boolean smfEligible = chosen.isSanMiguelApproved
                     && grade >= 88.0 && income <= NEED_BASED_INCOME_CEILING;
             if (smfEligible) {
-                eligibleNames[eligibleCount] = "San Miguel Foundation Scholarship";
-                eligibleBenefits[eligibleCount] =
-                    "- Educational assistance from San Miguel Foundation, Inc.\n" +
-                    "   - Possible employment opportunities within the San Miguel group\n" +
-                    "   - NOTE: Criteria come from a third-party summary; confirm requirements and benefits with the foundation";
+                eligibleScholarships[eligibleCount] = SCHOLARSHIPS[12];
                 eligibleCount++;
             }
         }
@@ -689,12 +659,17 @@ public class ScholarshipChecker {
         } else {
             System.out.println("You are ELIGIBLE for the following scholarship(s):");
             System.out.println();
-            // Loop only over the filled slots and print each scholarship with its benefits
             for (int i = 0; i < eligibleCount; i++) {
-                System.out.println((i + 1) + " │ " + eligibleNames[i]);
+                Scholarship scholarship = eligibleScholarships[i];
+                System.out.println((i + 1) + " │ " + scholarship.name);
                 System.out.println("   Benefits:");
-                System.out.println("   " + eligibleBenefits[i]);
-                
+                if (eligibilityNotes[i] != null) {
+                    System.out.println("   - " + eligibilityNotes[i].replace("\n", "\n     "));
+                }
+                for (String benefit : scholarship.benefits) {
+                    System.out.println("   - " + benefit);
+                }
+                System.out.println();
             }
         }
 

@@ -1,4 +1,6 @@
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -39,6 +41,88 @@ public class ScholarshipChecker {
     // (Gokongwei STEM, Jollibee ACE, San Miguel). 400,000 matches the TDP / RA 7687 benchmark.
     // Adjust this one value if you find an official figure.
     static final double NEED_BASED_INCOME_CEILING = 400_000;
+
+    static class Scholarship {
+        String name;
+        String[] benefits;
+        String informationUrl;
+
+        Scholarship(String name, String[] benefits, String informationUrl) {
+            this.name = name;
+            this.benefits = benefits;
+            this.informationUrl = informationUrl;
+        }
+    }
+
+    static final Scholarship[] SCHOLARSHIPS = {
+        new Scholarship("DOST-Undergraduate Scholarship", new String[] {
+            "Tuition and other school fees",
+            "Monthly stipend",
+            "Book and connectivity allowance",
+            "Transportation, thesis, graduating, and summer training allowances"
+        }, "https://www.science-scholarships.ph/"),
+        new Scholarship("SM Foundation College Scholarship", new String[] {
+            "Full tuition and miscellaneous fees",
+            "Book allowance and monthly stipend",
+            "Placement in an SM partner college or university",
+            "Possible employment opportunities within the SM Group"
+        }, "https://www.sm-foundation.org/what-we-do/education/"),
+        new Scholarship("Megaworld Foundation Scholarship", new String[] {
+            "Full or partial tuition coverage",
+            "Allowances for books and other educational needs",
+            "Internship and career opportunities within Megaworld Corporation"
+        }, "https://www.megaworldfoundation.com/scholarship_program"),
+        new Scholarship("Aboitiz College Scholarship Program (ACSP)", new String[] {
+            "Full tuition and fee coverage",
+            "Annual book and allowance subsidy",
+            "On-the-job training and possible employment opportunities"
+        }, "https://aboitiz.com/aboitiz-foundation/"),
+        new Scholarship("CHED Merit Scholarship Program", new String[] {
+            "Tuition and other school fee subsidy",
+            "Cash stipend allowance",
+            "For students enrolled in CHED-recognized priority programs"
+        }, "https://ched.gov.ph/"),
+        new Scholarship("CHED Bagong Pilipinas Merit Scholarship Program (BPMSP)", new String[] {
+            "Tuition and other school fee coverage",
+            "Living stipend and allowances",
+            "Academic excellence incentives"
+        }, "https://ched.gov.ph/"),
+        new Scholarship("Ayala U-GO Scholarship Program", new String[] {
+            "Renewable financial grant",
+            "Supports female students demonstrating financial need",
+            "Focuses on priority fields such as communication, education, and health sciences"
+        }, "https://ugoscholarship.ayalafoundation.org/"),
+        new Scholarship("GrabScholar College Scholarship", new String[] {
+            "Tuition and miscellaneous fee support",
+            "School supplies allowance",
+            "Monthly student allowance",
+            "Learning and development programs and internship opportunities"
+        }, "https://www.grab.com/ph/"),
+        new Scholarship("CHED Tertiary Education Subsidy (TES)", new String[] {
+            "Annual subsidy depending on school type",
+            "Additional allowance for students with disabilities",
+            "One-time licensure examination reimbursement"
+        }, "https://unifast.gov.ph/tes.html"),
+        new Scholarship("CHED Tulong Dunong Program (TDP)", new String[] {
+            "PHP 7,500 per regular semester",
+            "For eligible first undergraduate degree students",
+            "Subject to prioritization and availability of funds"
+        }, "https://unifast.gov.ph/tes.html"),
+        new Scholarship("GBF STEM College Scholarship (Gokongwei)", new String[] {
+            "Annual grant that varies by university",
+            "Scholar development programs and leadership training",
+            "Internship and possible employment opportunities in the Gokongwei Group"
+        }, "https://www.gbf.org.ph/"),
+        new Scholarship("Jollibee Group Foundation ACE Scholarship", new String[] {
+            "Support for indigent youth through the ACE program",
+            "Agro-entrepreneurship training and life-skills development",
+            "Employability and career support through partner institutions"
+        }, "https://jollibeegroupfoundation.org/"),
+        new Scholarship("San Miguel Foundation Scholarship", new String[] {
+            "Educational assistance",
+            "Possible employment opportunities within the San Miguel Group"
+        }, "https://www.sanmiguel.com.ph/")
+    };
 
     // ================================================================
     //   COURSE DATA
@@ -190,26 +274,145 @@ public class ScholarshipChecker {
 
         // try-with-resources: the Scanner is closed automatically when we're done
         try (Scanner scanner = new Scanner(System.in)) {
-            boolean tryAgain;
+            boolean running = true;
+            while (running) {
+                printMainMenu();
+                String choice = scanner.nextLine().trim();
 
-            // do-while: runs the checker at least once, then repeats while the user says Yes
-            do {
-                run(scanner);   // one full session (questions -> results)
-
-                System.out.println();
-                tryAgain = readYesNo(scanner,
-                        "Would you like to check another applicant? (Y = try again / N = exit): ");
-
-                if (tryAgain) {
-                    clearScreen();   // fresh screen for the next run
+                switch (choice) {
+                    case "1":
+                        run(scanner);
+                        returnToMenu(scanner);
+                        break;
+                    case "2":
+                        viewScholarshipDetails(scanner);
+                        break;
+                    case "3":
+                        compareScholarships(scanner);
+                        break;
+                    case "4":
+                        running = false;
+                        break;
+                    default:
+                        System.out.println("Invalid option. Please enter a number from 1 to 4.\n");
                 }
-            } while (tryAgain);
+            }
 
             System.out.println("\nThank you for using the Philippine Scholarship Eligibility Checker. Goodbye!");
         } catch (NoSuchElementException e) {
             // Happens if the input stream closes unexpectedly (e.g., Ctrl+D / Ctrl+Z)
             System.out.println("\nInput ended before all questions were answered. Exiting.");
         }
+    }
+
+    private static void printMainMenu() {
+        System.out.println("╔═════════════════════════════════════════════════════════╗");
+        System.out.println("║       PHILIPPINE SCHOLARSHIP ELIGIBILITY CHECKER        ║");
+        System.out.println("╠═════════════════════════════════════════════════════════╣");
+        System.out.println("║  1. Check Scholarship Eligibility                       ║");
+        System.out.println("║  2. View Scholarship Details                            ║");
+        System.out.println("║  3. Compare Scholarships                                ║");
+        System.out.println("║  4. Exit Program                                        ║");
+        System.out.println("╚═════════════════════════════════════════════════════════╝");
+        System.out.print("Choose an option: ");
+    }
+
+    private static void viewScholarshipDetails(Scanner scanner) {
+        printScholarshipList();
+        int choice = readScholarshipChoice(scanner, "Enter a scholarship number to view its details: ", -1);
+        Scholarship scholarship = SCHOLARSHIPS[choice - 1];
+
+        System.out.println("\n" + scholarship.name);
+        System.out.println("Benefits:");
+        for (String benefit : scholarship.benefits) {
+            System.out.println("- " + benefit);
+        }
+        System.out.println("Information: " + scholarship.informationUrl);
+        returnToMenu(scanner);
+    }
+
+    private static void compareScholarships(Scanner scanner) {
+        printScholarshipList();
+        int firstChoice = readScholarshipChoice(scanner, "Choose the first scholarship: ", -1);
+        int secondChoice = readScholarshipChoice(scanner, "Choose a different scholarship: ", firstChoice);
+        Scholarship first = SCHOLARSHIPS[firstChoice - 1];
+        Scholarship second = SCHOLARSHIPS[secondChoice - 1];
+        List<String> firstLines = comparisonLines(first);
+        List<String> secondLines = comparisonLines(second);
+
+        System.out.println();
+        System.out.printf("%-44s | %-44s%n", "SCHOLARSHIP 1", "SCHOLARSHIP 2");
+        System.out.println("---------------------------------------------+---------------------------------------------");
+        int rowCount = Math.max(firstLines.size(), secondLines.size());
+        for (int i = 0; i < rowCount; i++) {
+            String firstLine = i < firstLines.size() ? firstLines.get(i) : "";
+            String secondLine = i < secondLines.size() ? secondLines.get(i) : "";
+            System.out.printf("%-44s | %-44s%n", firstLine, secondLine);
+        }
+        returnToMenu(scanner);
+    }
+
+    private static List<String> comparisonLines(Scholarship scholarship) {
+        List<String> lines = wrapText(scholarship.name, 44);
+        lines.add("");
+        for (String benefit : scholarship.benefits) {
+            lines.addAll(wrapText("- " + benefit, 44));
+        }
+        return lines;
+    }
+
+    private static List<String> wrapText(String text, int width) {
+        List<String> lines = new ArrayList<>();
+        StringBuilder line = new StringBuilder();
+        for (String word : text.split("\\s+")) {
+            if (line.length() == 0) {
+                line.append(word);
+            } else if (line.length() + word.length() + 1 <= width) {
+                line.append(' ').append(word);
+            } else {
+                lines.add(line.toString());
+                line.setLength(0);
+                line.append(word);
+            }
+        }
+        if (line.length() > 0) {
+            lines.add(line.toString());
+        }
+        return lines;
+    }
+
+    private static void printScholarshipList() {
+        System.out.println("\nAVAILABLE SCHOLARSHIPS");
+        for (int i = 0; i < SCHOLARSHIPS.length; i++) {
+            System.out.printf("%2d. %s%n", i + 1, SCHOLARSHIPS[i].name);
+        }
+    }
+
+    private static int readScholarshipChoice(Scanner scanner, String prompt, int excludedChoice) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            try {
+                int choice = Integer.parseInt(input);
+                if (choice >= 1 && choice <= SCHOLARSHIPS.length && choice != excludedChoice) {
+                    return choice;
+                }
+            } catch (NumberFormatException ignored) {
+                // Show the same validation message for non-numeric and out-of-range choices.
+            }
+            if (excludedChoice > 0) {
+                System.out.println("Enter a number from 1 to " + SCHOLARSHIPS.length
+                        + " that is different from your first choice.");
+            } else {
+                System.out.println("Please enter a number from 1 to " + SCHOLARSHIPS.length + ".");
+            }
+        }
+    }
+
+    private static void returnToMenu(Scanner scanner) {
+        System.out.print("\nPress Enter to return to the main menu...");
+        scanner.nextLine();
+        System.out.println();
     }
 
     // ================================================================
